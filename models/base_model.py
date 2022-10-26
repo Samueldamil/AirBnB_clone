@@ -2,6 +2,8 @@
 """Defines class BaseModel"""
 from uuid import uuid4
 from datetime import datetime
+import models
+import models.engine
 
 
 class BaseModel:
@@ -28,6 +30,8 @@ class BaseModel:
     def save(self):
         """Updates updated_at with current datetime"""
         self.updated_at = datetime.today()
+        models.storage.new(self)
+        models.storage.save()
 
     def to_dict(self):
         """Return the dictionary of the BaseModel instance.
