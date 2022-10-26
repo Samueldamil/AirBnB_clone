@@ -13,7 +13,11 @@ class FileStorage:
     
     def all(self):
         """returns the dictionary __objects"""
-        return self.__objects
+        obj_dict = {}
+        for key, value in self.__objects.items():
+            if type(value) == BaseModel:
+                obj_dict[key] = value
+        return obj_dict
 
 
     def new(self, obj):
@@ -32,8 +36,14 @@ class FileStorage:
 
     def reload(self):
         """deserializes the JSON file to __objects"""
+        deserialized = {}
         try:
             with  open(self.__file_path, 'r') as f:
-                json.load(f)
+                deserialized = json.load(f)
+                for x in deserialized.values():
+                    name = x["__class__"]
+                    del x["__class__"]
+                    self.new(eval(name)(**x))
         except:
+            print ("Failed")
             pass
