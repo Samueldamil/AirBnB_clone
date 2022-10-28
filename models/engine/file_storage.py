@@ -2,12 +2,15 @@
 """Define class file storage"""
 import json
 from models.base_model import BaseModel
+from models.user import User
+
 
 
 class FileStorage:
     """class FileStorage for serialization and deserialization
     of json file
     """
+    __classes = {"BaseModel": BaseModel, "User": User}
     __file_path = "file.json"
     __objects = {}
     
@@ -15,8 +18,9 @@ class FileStorage:
         """returns the dictionary __objects"""
         obj_dict = {}
         for key, value in self.__objects.items():
-            if type(value) == BaseModel:
-                obj_dict[key] = value
+            for v in self.__classes.values():
+                if type(value) == v:
+                    obj_dict[key] = value
         return obj_dict
 
 
