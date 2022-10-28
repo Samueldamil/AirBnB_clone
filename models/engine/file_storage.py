@@ -13,11 +13,7 @@ class FileStorage:
     
     def all(self):
         """returns the dictionary __objects"""
-        obj_dict = {}
-        for key, value in self.__objects.items():
-            if type(value) == BaseModel:
-                obj_dict[key] = value
-        return obj_dict
+        return FileStorage.__objects
 
 
     def new(self, obj):
