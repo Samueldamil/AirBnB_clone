@@ -16,16 +16,12 @@ class FileStorage:
     
     def all(self):
         """returns the dictionary __objects"""
-<<<<<<< HEAD
         obj_dict = {}
         for key, value in self.__objects.items():
             for v in self.__classes.values():
                 if type(value) == v:
                     obj_dict[key] = value
         return obj_dict
-=======
-        return FileStorage.__objects
->>>>>>> caa2372ff9b4a23d0f41d41b7b15266349b0ce86
 
 
     def new(self, obj):

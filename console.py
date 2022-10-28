@@ -6,13 +6,10 @@ import cmd
 import models
 from datetime import datetime
 from models.base_model import BaseModel
-<<<<<<< HEAD
 from models.user import User
-=======
 import shlex
->>>>>>> caa2372ff9b4a23d0f41d41b7b15266349b0ce86
 
-classGroup = {"BaseModel": BaseModel}
+classGroup = {"BaseModel": BaseModel, "User": User}
 
 
 class HBNBCommand(cmd.Cmd):
@@ -22,15 +19,15 @@ class HBNBCommand(cmd.Cmd):
     prompt = '(hbnb) '
 
     def do_EOF(self, line):
-        """End of File command: exit the program"""
+        """End of File command: exit the program\n"""
         return True
 
     def emptyline(self):
-        """ Overwriting the emptyline method """
+        """ Overwriting the emptyline method\n"""
         return False
 
     def do_quit(self, line):
-        """Quit command exit the program"""
+        """Quit command exit the program\n"""
         return True
 
     def do_create(self, line):
@@ -48,14 +45,6 @@ class HBNBCommand(cmd.Cmd):
             instance.save()
         except Exception:
             print("** class doesn't exist **")
-
-    def help_quit(self):
-        ''' help_quit '''
-        print("Quit command to exit the program\n")
-
-    def help_EOF(self):
-        """help_EOF"""
-        print("End of File command: exit the program\n")
 
     def do_show(self, line):
         """Prints an instance as a string based on the class and id"""
