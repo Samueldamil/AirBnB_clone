@@ -169,7 +169,8 @@ class HBNBCommand(cmd.Cmd):
             print("** class doesn't exist **")
 
     def do_update(self, line):
-        """Update an instance based on the class name, id, attribute & value\n"""
+        """Update an instance based on the class_name,
+           id, attribute & value\n"""
         className_line = line.split()
         staticArray = ["id", "created_at", "updated_at"]
         objects = models.storage.all()
