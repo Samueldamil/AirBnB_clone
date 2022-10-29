@@ -7,10 +7,8 @@ import models
 
 class BaseModel:
     """Represents the BaswModel for AirBnB project"""
-
     def __init__(self, *args, **kwargs):
         """Initializes a new BaseModel.
-
         Args:
             *args (any): Unused
             **kwargs (dict): Keys for attributes
@@ -34,7 +32,6 @@ class BaseModel:
 
     def to_dict(self):
         """Return the dictionary of the BaseModel instance.
-
         Includes the key/value pair __class__ representing
         the class name of the object.
         """
