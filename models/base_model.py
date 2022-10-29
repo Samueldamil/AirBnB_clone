@@ -19,7 +19,6 @@ class BaseModel:
         self.id = str(uuid4())
         self.created_at = datetime.today()
         self.updated_at = datetime.today()
-        models.storage.new(self)
         if len(kwargs) != 0:
             for k, w in kwargs.items():
                 if k == "created_at" or k == "updated_at":
@@ -30,6 +29,7 @@ class BaseModel:
     def save(self):
         """Updates updated_at with current datetime"""
         self.updated_at = datetime.today()
+        models.storage.new(self)
         models.storage.save()
 
     def to_dict(self):
