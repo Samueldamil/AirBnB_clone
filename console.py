@@ -13,9 +13,10 @@ from models.city import City
 from models.amenity import Amenity
 from models.review import Review
 import shlex
+import re
 
 classGroup = {"Amenity": Amenity, "BaseModel": BaseModel, "City": City,
-           "Place": Place, "Review": Review, "State": State, "User": User}
+              "Place": Place, "Review": Review, "State": State, "User": User}
 
 
 class HBNBCommand(cmd.Cmd):
@@ -23,6 +24,66 @@ class HBNBCommand(cmd.Cmd):
     HBNB Class
     """
     prompt = '(hbnb) '
+
+    # Find before execution
+    def default(self, line):
+        """Catch commands if nothing else matches then.\n"""
+        self._precmd(line)
+
+    def _precmd(self, line):
+        """Intercepts commands to test for class.method() syntax\n"""
+
+        match = re.search(r"^(\w*)\.(\w+)(?:\(([^)]*)\))$", line)
+        if not match:
+            return line
+        class_name = match.group(1)
+        method = match.group(2)
+        args = match.group(3)
+        match_uid_and_args = re.search('^"([^"]*)"(?:, (.*))?$', args)
+        if match_uid_and_args:
+            uid = match_uid_and_args.group(1)
+            attr_or_dict = match_uid_and_args.group(2)
+        else:
+            uid = args
+            attr_or_dict = False
+
+        attr_and_value = ""
+        if method == "update" and attr_or_dict:
+            match_dict = re.search('^({.*})$', attr_or_dict)
+            if match_dict:
+                self.update_dict(class_name, uid, match_dict.group(1))
+                return ""
+            match_attr_and_value = re.search(
+                '^(?:"([^"]*)")?(?:, (.*))?$', attr_or_dict)
+            if match_attr_and_value:
+                attr_and_value = (match_attr_and_value.group(
+                    1) or "") + " " + (match_attr_and_value.group(2) or "")
+        command = method + " " + class_name + " " + uid + " " + attr_and_value
+        self.onecmd(command)
+        return command
+
+    def update_dict(self, class_name, uid, s_dict):
+        """Helper method for update() with a dictionary.\n"""
+        s = s_dict.replace("'", '"')
+        d = json.loads(s)
+        if not class_name:
+            print("** class name missing **")
+        elif class_name not in storage.classes():
+            print("** class doesn't exist **")
+        elif uid is None:
+            print("** instance id missing **")
+        else:
+            key = "{}.{}".format(class_name, uid)
+            if key not in storage.all():
+                print("** no instance found **")
+            else:
+                attributes = storage.attributes()[class_name]
+                for attribute, value in d.items():
+                    if attribute in attributes:
+                        value = attributes[attribute](value)
+                    setattr(storage.all()[key], attribute, value)
+                storage.all()[key].save()
+    # End
 
     def do_EOF(self, line):
         """End of File command: exit the program\n"""
@@ -39,7 +100,7 @@ class HBNBCommand(cmd.Cmd):
     def do_create(self, line):
         """
         Creates a new BaseModel instance,
-        JSON file and prints the id
+        JSON file and prints the id\n
         """
         if len(line) == 0:
             print("** class name missing **")
@@ -53,7 +114,7 @@ class HBNBCommand(cmd.Cmd):
             print("** class doesn't exist **")
 
     def do_show(self, line):
-        """Prints an instance as a string based on the class and id"""
+        """Prints an instance as a string based on the class and id\n"""
         className_line = line.split()
         if len(className_line) == 0:
             print("** class name missing **")
@@ -70,7 +131,7 @@ class HBNBCommand(cmd.Cmd):
                 print("** no instance found **")
 
     def do_destroy(self, line):
-        """Deletes an instance based on the class and id"""
+        """Deletes an instance based on the class and id\n"""
         className_line = line.split()
         if len(className_line) == 0:
             print("** class name missing **")
@@ -88,7 +149,7 @@ class HBNBCommand(cmd.Cmd):
                 print("** no instance found **")
 
     def do_all(self, arg):
-        """Prints string representations of instances"""
+        """Prints string representations of instances\n"""
         className_line = shlex.split(arg)
         obj_list = []
         if len(className_line) == 0:
@@ -108,7 +169,7 @@ class HBNBCommand(cmd.Cmd):
             print("** class doesn't exist **")
 
     def do_update(self, line):
-        """Update an instance based on the class name, id, attribute & value"""
+        """Update an instance based on the class name, id, attribute & value\n"""
         className_line = line.split()
         staticArray = ["id", "created_at", "updated_at"]
         objects = models.storage.all()
@@ -133,7 +194,7 @@ class HBNBCommand(cmd.Cmd):
                 ojb.save()
 
     def do_count(self, line):
-        "count instances of the class"
+        """counts instances of the particular class\n"""
         className_line = line.split()
         if className_line[0] not in classGroup:
             return
