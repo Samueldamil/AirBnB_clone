@@ -17,12 +17,14 @@ class BaseModel:
         self.id = str(uuid4())
         self.created_at = datetime.today()
         self.updated_at = datetime.today()
+        models.storage.new(self)
         if len(kwargs) != 0:
             for k, w in kwargs.items():
                 if k == "created_at" or k == "updated_at":
                     self.__dict__[k] = datetime.strptime(w, tset)
                 else:
                     self.__dict__[k] = w
+
 
     def save(self):
         """Updates updated_at with current datetime"""
