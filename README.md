@@ -2,10 +2,10 @@
 ---
 ![AirBnB Logo](/assets/AirBnB_logo.png "AirBnB Logo")  
 ---
-# Project description  
+## Project description
 ---  
-# Console Usage  
+## Console Usage
 ---
-# Tests  
+## Tests
 ---
-# Authors
+## Authors
