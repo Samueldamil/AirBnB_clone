@@ -24,7 +24,6 @@ class BaseModel:
                 else:
                     self.__dict__[k] = w
 
-
     def save(self):
         """Updates updated_at with current datetime"""
         self.updated_at = datetime.today()
